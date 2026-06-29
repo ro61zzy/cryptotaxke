@@ -8,6 +8,8 @@ import { retrieveKnowledge, formatCitations } from "@/lib/rag/search";
 import { formatKES } from "@/lib/utils";
 import type { Address, ChainScope } from "@/types";
 
+export const maxDuration = 60;
+
 const bodySchema = z.object({
   address: z.string(),
   chain: z.string().optional(),
@@ -54,7 +56,9 @@ export async function POST(req: Request) {
     }
 
     const chainScope: ChainScope = parseChainScope(chain);
-    const analysis = await analyzeWallet(address as Address, chainScope);
+    const analysis = await analyzeWallet(address as Address, chainScope, {
+      lightweight: true,
+    });
 
     if (analysis.transactions.length === 0) {
       return NextResponse.json({
@@ -94,9 +98,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ answer, citations });
   } catch (error) {
     console.error("[CryptoTaxKE] chat error:", error);
-    return NextResponse.json(
-      { error: "Failed to process your question." },
-      { status: 500 },
-    );
+    const message =
+      error instanceof Error ? error.message : "Failed to process your question.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

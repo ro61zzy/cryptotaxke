@@ -2,10 +2,30 @@
 
 /*
  * CryptoTaxKE design tokens.
- * Tailwind v4 reads these via @theme to generate utility classes
- * (e.g. bg-surface, text-brand, border-line).
+ * Light mode is the default; `.dark` on <html> switches to dark palette.
  */
 @theme {
+  --color-background: #fafafa;
+  --color-surface: #ffffff;
+  --color-surface-2: #f4f4f5;
+  --color-line: #e4e4e7;
+
+  --color-foreground: #09090b;
+  --color-muted: #71717a;
+
+  --color-brand: #c8102e;
+  --color-brand-strong: #9a0d24;
+  --color-brand-soft: #fde8eb;
+
+  --color-danger: #dc2626;
+  --color-warning: #ca8a04;
+  --color-positive: #15803d;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+.dark {
   --color-background: #0b0f14;
   --color-surface: #111821;
   --color-surface-2: #16202b;
@@ -14,16 +34,13 @@
   --color-foreground: #e8eef5;
   --color-muted: #93a1b1;
 
-  --color-brand: #10b981;
-  --color-brand-strong: #059669;
-  --color-brand-soft: #064e3b;
+  --color-brand: #c8102e;
+  --color-brand-strong: #9a0d24;
+  --color-brand-soft: #2a0a0f;
 
   --color-danger: #f87171;
   --color-warning: #fbbf24;
-  --color-positive: #34d399;
-
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-positive: #4ade80;
 }
 
 html {
@@ -37,9 +54,14 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Subtle ambient gradient used on marketing sections. */
 .bg-grid {
   background-image:
-    radial-gradient(60rem 60rem at 70% -10%, rgba(16, 185, 129, 0.12), transparent 60%),
-    radial-gradient(40rem 40rem at 10% 10%, rgba(16, 185, 129, 0.06), transparent 55%);
+    radial-gradient(60rem 60rem at 70% -10%, rgba(200, 16, 46, 0.08), transparent 60%),
+    radial-gradient(40rem 40rem at 10% 10%, rgba(200, 16, 46, 0.04), transparent 55%);
+}
+
+.dark .bg-grid {
+  background-image:
+    radial-gradient(60rem 60rem at 70% -10%, rgba(200, 16, 46, 0.14), transparent 60%),
+    radial-gradient(40rem 40rem at 10% 10%, rgba(200, 16, 46, 0.06), transparent 55%);
 }

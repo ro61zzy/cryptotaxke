@@ -11,16 +11,17 @@ transactions, calculate gains in KES, and estimate tax under KRA rules.
 CryptoTaxKE addresses this with automatic on-chain import, plain-English
 explanations, a cost-basis engine, and a tax-aware AI assistant.
 
-**MVP scope:** EVM chains (Ethereum first), read-only import by address,
-hybrid classification, FIFO gains in KES, configurable tax estimate, and a
-RAG-grounded chat. Out of scope for MVP: Solana/BTC, live exchange APIs.
+**MVP scope:** EVM chains (Ethereum, Base, Polygon, BNB Chain), read-only import by
+address, hybrid classification, FIFO gains in KES, configurable tax estimate, CSV
+export, and a RAG-grounded chat. Out of scope for MVP: Arbitrum/Optimism/Avalanche,
+Solana/BTC, live exchange APIs.
 
 ## 2. Architecture overview
 
-A single Next.js application (frontend + API routes) backed by Postgres, with
-two external services (Alchemy for on-chain data, OpenAI for AI). This keeps
-deployment and operations simple for a solo project while preserving clean
-internal boundaries.
+A single Next.js application (frontend + API routes) with external services
+(Alchemy for on-chain data, OpenAI for AI, CoinGecko/Frankfurter for pricing).
+This keeps deployment and operations simple for a solo project while preserving
+clean internal boundaries.
 
 ```
 Browser ──> Next.js (App Router)
@@ -40,12 +41,12 @@ External: Alchemy (on-chain) · OpenAI (LLM/embeddings) · Postgres+pgvector
 | Decision | Choice | Reasoning |
 | --- | --- | --- |
 | App framework | Next.js (single app) | One deploy, colocated API + UI; fast for a solo timeline |
-| On-chain access | Alchemy SDK behind an adapter | Reliable indexed transfer history; adapter isolates the vendor |
-| Storage model | Hybrid on/off-chain mindset | Minimal canonical data + derived analytics; cacheable pricing |
+| On-chain access | Alchemy HTTP adapter | Reliable indexed transfer history; adapter isolates the vendor |
+| Storage model | In-memory analysis per request | No DB required for MVP; honest empty states when keys missing |
 | Classification | Heuristics first, AI fallback | Cheap, fast, auditable for obvious cases; AI only where needed |
 | AI provider | Behind an adapter | Swappable provider; testable without network |
 | Tax rules | Configurable, versioned ruleset | Kenyan rules change often (see §6); estimates stay maintainable |
-| Demo mode | Sample data when keys absent | App is testable/gradeable without credentials |
+| Chat context | Lightweight re-analysis | Chat skips per-tx AI to stay within serverless timeouts |
 
 ### Design patterns used
 - **Adapter** — `lib/chain` and `lib/ai` wrap third-party SDKs behind stable interfaces.

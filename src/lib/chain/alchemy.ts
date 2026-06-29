@@ -66,6 +66,14 @@ async function alchemyRpc<T>(
   return json.result;
 }
 
+/** Alchemy only supports internal transfers on Ethereum and Polygon. */
+function transferCategories(chainId: ChainId): string[] {
+  if (chainId === 1 || chainId === 137) {
+    return ["external", "erc20", "internal"];
+  }
+  return ["external", "erc20"];
+}
+
 async function fetchTransfers(
   chainId: ChainId,
   filter: { fromAddress?: Address; toAddress?: Address },
@@ -76,7 +84,7 @@ async function fetchTransfers(
     [
       {
         ...filter,
-        category: ["external", "erc20", "internal"],
+        category: transferCategories(chainId),
         withMetadata: true,
         maxCount: "0x64",
         order: "desc",

@@ -13,6 +13,7 @@ import { features } from "@/lib/env";
 import { classifyHeuristic } from "@/lib/classify/heuristics";
 import { classifyWithAi } from "@/lib/classify/ai";
 import { explainTransaction } from "@/lib/ai/explain";
+import { explainWithTemplate } from "@/lib/explain/templates";
 import { computePortfolioValueKES, computeTaxSummary } from "@/lib/tax/fifo";
 
 export interface AnalyzedTransaction extends NormalizedTransaction {
@@ -61,13 +62,23 @@ async function fetchForScope(
   return { transactions, chainErrors };
 }
 
+export interface AnalyzeOptions {
+  /** Skip per-tx OpenAI calls; heuristics + templates only (e.g. chat context). */
+  lightweight?: boolean;
+}
+
 async function analyzeTransaction(
   tx: NormalizedTransaction,
   address: Address,
+  options?: AnalyzeOptions,
 ): Promise<AnalyzedTransaction> {
   const heuristic = classifyHeuristic(tx, address);
-  const classification = await classifyWithAi(tx, address, heuristic);
-  const explanation = await explainTransaction(tx, classification);
+  const classification = options?.lightweight
+    ? heuristic
+    : await classifyWithAi(tx, address, heuristic);
+  const explanation = options?.lightweight
+    ? explainWithTemplate(tx, classification)
+    : await explainTransaction(tx, classification);
   return { ...tx, classification, explanation };
 }
 
@@ -93,11 +104,12 @@ function buildEmptyMessage(
 export async function analyzeWallet(
   address: Address,
   chainScope: ChainScope = "all",
+  options?: AnalyzeOptions,
 ): Promise<WalletAnalysis> {
   const fetch = await fetchForScope(address, chainScope);
 
   const transactions = await Promise.all(
-    fetch.transactions.map((tx) => analyzeTransaction(tx, address)),
+    fetch.transactions.map((tx) => analyzeTransaction(tx, address, options)),
   );
 
   const sorted = transactions.sort((a, b) => b.timestamp - a.timestamp);

@@ -73,8 +73,7 @@ export function WalletForm() {
       </form>
 
       <p className="mt-2 text-xs text-muted">
-        Supports Ethereum, Base, Polygon, Arbitrum, Optimism, BNB Chain, and Avalanche.
-        Bitcoin and Binance exchange require separate import (see below).
+        Supports Ethereum, Base, Polygon, and BNB Chain. More networks coming later.
       </p>
 
       {error && <p className="mt-2 text-sm text-danger">{error}</p>}

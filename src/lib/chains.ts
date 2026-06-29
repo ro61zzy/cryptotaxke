@@ -9,9 +9,7 @@ export function parseChainScope(value?: string): ChainScope {
 }
 
 export function chainScopeLabel(scope: ChainScope): string {
-  if (scope === "all") {
-    return `All chains (${SUPPORTED_CHAINS.map((id) => CHAIN_NAMES[id]).join(", ")})`;
-  }
+  if (scope === "all") return "All chains";
   return CHAIN_NAMES[scope];
 }
 

@@ -23,9 +23,7 @@ export const CHAIN_NAMES: Record<ChainId, string> = {
 };
 
 /** Mainnet chains shown in the UI (order = priority). */
-export const SUPPORTED_CHAINS: ChainId[] = [
-  1, 8453, 137, 42161, 10, 56, 43114,
-];
+export const SUPPORTED_CHAINS: ChainId[] = [1, 8453, 137, 56];
 
 export type ChainScope = ChainId | "all";
 

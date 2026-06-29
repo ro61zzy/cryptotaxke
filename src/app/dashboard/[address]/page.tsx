@@ -11,6 +11,7 @@ import { ChainSwitcher } from "@/components/dashboard/ChainSwitcher";
 import { ChatPanel } from "@/components/dashboard/ChatPanel";
 import { TaxSummaryCards } from "@/components/dashboard/TaxSummaryCards";
 import { TransactionList } from "@/components/dashboard/TransactionList";
+import { ExportCsvButton } from "@/components/dashboard/ExportCsvButton";
 import { shortAddress } from "@/lib/utils";
 
 export default async function WalletResultsPage({
@@ -70,9 +71,12 @@ export default async function WalletResultsPage({
             <TaxSummaryCards analysis={analysis} />
           </div>
 
-          <div className="mt-10 flex items-center justify-between">
+          <div className="mt-10 flex items-center justify-between gap-3">
             <h2 className="text-lg font-medium">Transactions</h2>
-            <Badge tone="neutral">{analysis.transactions.length} total</Badge>
+            <div className="flex items-center gap-2">
+              <ExportCsvButton transactions={analysis.transactions} />
+              <Badge tone="neutral">{analysis.transactions.length} total</Badge>
+            </div>
           </div>
 
           <div className="mt-4">

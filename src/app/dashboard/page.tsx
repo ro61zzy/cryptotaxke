@@ -1,5 +1,4 @@
 import { Container } from "@/components/ui/Container";
-import { DataSourcesNote } from "@/components/dashboard/DataSourcesNote";
 import { WalletForm } from "@/components/dashboard/WalletForm";
 
 export default function DashboardPage() {
@@ -13,9 +12,8 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="mx-auto mt-10 max-w-2xl space-y-8">
+      <div className="mx-auto mt-10 max-w-2xl">
         <WalletForm />
-        <DataSourcesNote />
       </div>
     </Container>
   );
