@@ -78,7 +78,7 @@ export function TransactionRow({
               />
             ))
           ) : (
-            <span className="text-muted">—</span>
+            <span className="text-muted">·</span>
           )}
         </div>
       </div>

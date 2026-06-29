@@ -3,7 +3,7 @@ import { isAddress } from "viem";
 import { NextResponse } from "next/server";
 import { analyzeWallet } from "@/lib/analysis";
 import { parseChainScope } from "@/lib/chains";
-import { getOpenAIClient } from "@/lib/ai/client";
+import { getOpenAIClient, formatOpenAiError } from "@/lib/ai/client";
 import { retrieveKnowledge, formatCitations } from "@/lib/rag/search";
 import { formatKES } from "@/lib/utils";
 import type { Address, ChainScope } from "@/types";
@@ -98,8 +98,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ answer, citations });
   } catch (error) {
     console.error("[CryptoTaxKE] chat error:", error);
-    const message =
-      error instanceof Error ? error.message : "Failed to process your question.";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: formatOpenAiError(error) }, { status: 500 });
   }
 }

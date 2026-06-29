@@ -80,7 +80,7 @@ export function WalletForm() {
 
       {isPending && (
         <p className="mt-3 text-sm text-muted">
-          Fetching transactions and running tax analysis — this can take a few
+          Fetching transactions and running tax analysis. This can take a few
           seconds.
         </p>
       )}

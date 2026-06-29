@@ -28,7 +28,7 @@ _As a user, I want to paste a wallet address so that I can see its activity._
 _As a user, I want my transactions imported automatically._
 - [x] Native + ERC-20 transfers are fetched via Alchemy
 - [x] Sent and received transfers are merged per transaction hash
-- [x] App falls back to sample data when no API key is configured
+- [x] Clear message when no API key is configured (no fake data)
 
 **US-3 — See readable transactions**
 _As a user, I want each transaction shown clearly instead of raw hashes._
@@ -43,7 +43,7 @@ _As a user, I want each transaction labeled (trade, transfer, etc.)._
 
 **US-5 — Project foundations (engineering)**
 - [x] CI runs lint, typecheck, tests, and build on every push
-- [ ] App deployed to Vercel (demo mode)
+- [x] App deployed to Vercel
 
 ### Sprint 2 — Intelligence
 
@@ -63,7 +63,7 @@ _As a user, I want a sentence explaining each transaction._
 **US-9 — Capital gains (FIFO)**
 - [x] FIFO cost-basis engine matches disposals to acquisitions
 - [x] Realized gains computed in KES
-- [ ] Engine covered by unit tests
+- [x] Engine covered by unit tests
 
 **US-10 — Dashboard & tax estimate**
 - [x] Portfolio value, capital gains, and staking income shown

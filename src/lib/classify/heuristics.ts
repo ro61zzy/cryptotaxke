@@ -54,7 +54,7 @@ export function classifyHeuristic(
   if (ins.length > 0 && outs.length === 0) {
     return {
       category: "transfer_in",
-      confidence: 0.55,
+      confidence: 0.75,
       source: "heuristic",
       reasoning: "Assets were received with nothing sent in return.",
     };
@@ -63,7 +63,7 @@ export function classifyHeuristic(
   if (outs.length > 0 && ins.length === 0) {
     return {
       category: "transfer_out",
-      confidence: 0.55,
+      confidence: 0.75,
       source: "heuristic",
       reasoning: "Assets were sent with nothing received in return.",
     };

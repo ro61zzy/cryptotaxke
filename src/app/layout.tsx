@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CryptoTaxKE — AI-powered crypto tax assistant for Kenya",
+  title: "CryptoTaxKE | AI-powered crypto tax assistant for Kenya",
   description:
     "Import your crypto transactions, understand them in plain English, calculate gains in KES, and estimate your tax under current KRA rules.",
 };

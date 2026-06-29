@@ -3,8 +3,8 @@ import { Container } from "@/components/ui/Container";
 const steps = [
   {
     step: "01",
-    title: "Connect",
-    body: "Paste a wallet address or connect MetaMask. No private keys, ever — we only read public on-chain data.",
+    title: "Paste address",
+    body: "Paste a 0x wallet address on the dashboard. No private keys, ever. We only read public on-chain data.",
   },
   {
     step: "02",

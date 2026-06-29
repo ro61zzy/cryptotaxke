@@ -19,7 +19,7 @@ export default function WalletAnalysisLoading() {
       </div>
 
       <p className="mt-6 text-sm text-muted">
-        Analyzing wallet — importing transactions, classifying, and calculating
+        Analyzing wallet: importing transactions, classifying, and calculating
         tax estimates…
       </p>
 

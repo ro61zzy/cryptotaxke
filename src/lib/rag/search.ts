@@ -68,7 +68,10 @@ export async function retrieveKnowledge(
   limit = 3,
 ): Promise<KnowledgeChunk[]> {
   const openai = getOpenAIClient();
-  if (!openai) return keywordSearch(query, limit);
+  // Keyword search is enough for our small knowledge base and avoids embedding API calls.
+  if (!openai || process.env.OPENAI_RAG_EMBEDDINGS !== "true") {
+    return keywordSearch(query, limit);
+  }
 
   try {
     const cache = await ensureEmbeddings();

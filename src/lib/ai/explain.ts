@@ -15,14 +15,14 @@ const explanationSchema = z.object({
 
 /**
  * Generate a plain-English explanation for one transaction.
- * Falls back to templates when OpenAI is not configured.
+ * Uses templates for clear classifications to save OpenAI quota; chat uses the API instead.
  */
 export async function explainTransaction(
   tx: NormalizedTransaction,
   classification: ClassificationResult,
 ): Promise<TransactionExplanation> {
   const openai = getOpenAIClient();
-  if (!openai) {
+  if (!openai || classification.confidence >= 0.7) {
     return explainWithTemplate(tx, classification);
   }
 

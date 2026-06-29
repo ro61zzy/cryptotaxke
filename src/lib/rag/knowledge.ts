@@ -14,28 +14,28 @@ export const KENYA_TAX_KNOWLEDGE: KnowledgeChunk[] = [
   {
     id: "dat-repeal",
     title: "Digital Asset Tax repeal",
-    citation: "Finance Act 2025 — repeal of 3% Digital Asset Tax",
+    citation: "Finance Act 2025: repeal of 3% Digital Asset Tax",
     text:
       "Kenya repealed the 3% Digital Asset Tax (DAT) in July 2025. Crypto transactions are no longer taxed at 3% of gross transaction value under DAT.",
   },
   {
     id: "excise-vasp",
     title: "Excise duty on VASP fees",
-    citation: "Finance Act 2025 — 10% excise on VASP fees",
+    citation: "Finance Act 2025: 10% excise on VASP fees",
     text:
-      "From July 2025, a 10% excise duty applies to fees and commissions charged by Virtual Asset Service Providers (VASPs) to users — not to the full trade amount.",
+      "From July 2025, a 10% excise duty applies to fees and commissions charged by Virtual Asset Service Providers (VASPs) to users, not to the full trade amount.",
   },
   {
     id: "income-trading",
     title: "Trading income",
-    citation: "KRA — income tax on crypto trading profits",
+    citation: "KRA: income tax on crypto trading profits",
     text:
       "Profits from trading or disposing of crypto are generally subject to Kenyan income tax at progressive individual rates (approximately 10%–35%). Losses may offset gains depending on circumstances and record-keeping.",
   },
   {
     id: "income-staking",
     title: "Staking and mining income",
-    citation: "KRA — staking/mining as income",
+    citation: "KRA: staking/mining as income",
     text:
       "Staking rewards, mining income, and many airdrops are typically treated as taxable income at fair market value when received, taxed at progressive income tax rates.",
   },
@@ -49,7 +49,7 @@ export const KENYA_TAX_KNOWLEDGE: KnowledgeChunk[] = [
   {
     id: "record-keeping",
     title: "Record keeping",
-    citation: "Tax Procedures Act — taxpayer obligations",
+    citation: "Tax Procedures Act: taxpayer obligations",
     text:
       "Taxpayers should keep records of acquisition date, disposal date, amounts, and KES value at each event. FIFO is a common cost-basis method when specific lot identification is unavailable.",
   },
@@ -63,7 +63,7 @@ export const KENYA_TAX_KNOWLEDGE: KnowledgeChunk[] = [
   {
     id: "p2p-binance",
     title: "Exchange and P2P trades",
-    citation: "CryptoTaxKE — off-chain import",
+    citation: "CryptoTaxKE: off-chain import",
     text:
       "Trades on Binance, P2P, or other centralised exchanges are off-chain until withdrawn on-chain. They should be imported from exchange CSV exports; wallet-only analysis will not capture them.",
   },

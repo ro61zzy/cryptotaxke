@@ -65,29 +65,31 @@ export default async function WalletResultsPage({
       )}
 
       {hasTransactions && (
-        <>
-          <div className="mt-8">
+        <div className="mt-8 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem]">
+          <div className="min-w-0">
             <h2 className="mb-4 text-lg font-medium">Tax summary</h2>
             <TaxSummaryCards analysis={analysis} />
-          </div>
 
-          <div className="mt-10 flex items-center justify-between gap-3">
-            <h2 className="text-lg font-medium">Transactions</h2>
-            <div className="flex items-center gap-2">
-              <ExportCsvButton transactions={analysis.transactions} />
-              <Badge tone="neutral">{analysis.transactions.length} total</Badge>
+            <div className="mt-10 flex items-center justify-between gap-3">
+              <h2 className="text-lg font-medium">Transactions</h2>
+              <div className="flex items-center gap-2">
+                <ExportCsvButton transactions={analysis.transactions} />
+                <Badge tone="neutral">{analysis.transactions.length} total</Badge>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <TransactionList
+                transactions={analysis.transactions}
+                showChain={chainScope === "all"}
+              />
             </div>
           </div>
 
-          <div className="mt-4">
-            <TransactionList
-              transactions={analysis.transactions}
-              showChain={chainScope === "all"}
-            />
-          </div>
-
-          <ChatPanel address={address} chainScope={chainScope} />
-        </>
+          <aside className="min-w-0 lg:order-none">
+            <ChatPanel address={address} chainScope={chainScope} sidebar />
+          </aside>
+        </div>
       )}
     </Container>
   );

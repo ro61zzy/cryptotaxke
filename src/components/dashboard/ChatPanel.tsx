@@ -6,6 +6,7 @@ import type { ChainScope } from "@/types";
 import { chainQueryParam } from "@/lib/chains";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { cn } from "@/lib/utils";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -16,9 +17,14 @@ interface ChatMessage {
 export function ChatPanel({
   address,
   chainScope,
+  sidebar = false,
+  className,
 }: {
   address: string;
   chainScope: ChainScope;
+  /** Sticky right-column layout on large screens. */
+  sidebar?: boolean;
+  className?: string;
 }) {
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -72,9 +78,15 @@ export function ChatPanel({
   }
 
   return (
-    <Card className="mt-10">
+    <Card
+      className={cn(
+        sidebar &&
+          "flex max-h-[calc(100vh-7rem)] flex-col lg:sticky lg:top-24 lg:max-h-[calc(100vh-6rem)]",
+        className,
+      )}
+    >
       <div className="flex items-center gap-2">
-        <MessageSquare className="h-5 w-5 text-brand" />
+        <MessageSquare className="h-5 w-5 shrink-0 text-brand" />
         <h2 className="text-lg font-medium">Ask about your taxes</h2>
       </div>
       <p className="mt-2 text-sm text-muted">
@@ -82,8 +94,13 @@ export function ChatPanel({
         profit did I make?&quot; or &quot;Which transactions are taxable?&quot;
       </p>
 
-      {messages.length > 0 && (
-        <div className="mt-4 max-h-80 space-y-3 overflow-y-auto rounded-lg border border-line bg-surface-2 p-4">
+      {(messages.length > 0 || loading) && (
+        <div
+          className={cn(
+            "mt-4 space-y-3 overflow-y-auto rounded-lg border border-line bg-surface-2 p-4",
+            sidebar ? "min-h-48 flex-1" : "max-h-80",
+          )}
+        >
           {messages.map((msg, i) => (
             <div
               key={i}
@@ -110,7 +127,10 @@ export function ChatPanel({
         </div>
       )}
 
-      <form onSubmit={ask} className="mt-4 flex gap-2">
+      <form
+        onSubmit={ask}
+        className={cn("mt-4 flex shrink-0 gap-2", sidebar && "flex-col sm:flex-row")}
+      >
         <input
           value={question}
           onChange={(e) => setQuestion(e.target.value)}

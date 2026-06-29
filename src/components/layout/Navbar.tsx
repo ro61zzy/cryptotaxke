@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { NavbarLaunchButton } from "@/components/layout/NavbarLaunchButton";
 
 export function Navbar() {
   return (
@@ -28,9 +28,7 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Link href="/dashboard">
-            <Button size="sm">Launch app</Button>
-          </Link>
+          <NavbarLaunchButton />
         </div>
       </Container>
     </header>

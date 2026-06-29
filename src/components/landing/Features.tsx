@@ -12,7 +12,7 @@ const features = [
   {
     icon: Wallet,
     title: "Automatic import",
-    body: "Paste an address or connect a wallet to pull in swaps, transfers, staking rewards and more.",
+    body: "Paste a 0x address to pull in swaps, transfers, staking rewards and more.",
   },
   {
     icon: MessagesSquare,
@@ -22,7 +22,7 @@ const features = [
   {
     icon: Tags,
     title: "Smart classification",
-    body: "Transactions are labeled — trade, transfer, staking, airdrop — using rules plus AI.",
+    body: "Transactions are labeled (trade, transfer, staking, airdrop) using rules plus AI.",
   },
   {
     icon: Calculator,
