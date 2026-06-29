@@ -20,7 +20,7 @@ https://github.com/ro61zzy/cryptotaxke
 
 | Deliverable | Link |
 | --- | --- |
-| Deployed app | _Set after Vercel deploy — add URL here_ |
+| Deployed app | [https://cryptotaxke.vercel.app](https://cryptotaxke.vercel.app) |
 | Agile task board | [CryptoTaxKE — Capstone Sprint Board](https://github.com/users/ro61zzy/projects/3) |
 | Design & testing document | [`docs/design-and-testing.md`](docs/design-and-testing.md) |
 | Sprint plan & user stories | [`docs/sprint-plan.md`](docs/sprint-plan.md) |
