@@ -6,6 +6,12 @@ const COINGECKO_IDS: Record<string, string> = {
   USDT: "tether",
   DAI: "dai",
   BTC: "bitcoin",
+  BNB: "binancecoin",
+  WBNB: "binancecoin",
+  AVAX: "avalanche-2",
+  WAVAX: "avalanche-2",
+  MATIC: "matic-network",
+  POL: "matic-network",
   WBTC: "wrapped-bitcoin",
 };
 
@@ -18,6 +24,10 @@ const FALLBACK_USD: Record<string, number> = {
   DAI: 1,
   BTC: 65000,
   WBTC: 65000,
+  MATIC: 0.5,
+  POL: 0.5,
+  BNB: 600,
+  AVAX: 35,
 };
 
 const FALLBACK_USD_KES = 130;

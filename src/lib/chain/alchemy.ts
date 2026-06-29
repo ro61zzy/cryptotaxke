@@ -1,78 +1,136 @@
-import {
-  Alchemy,
-  Network,
-  AssetTransfersCategory,
-  SortingOrder,
-  type AssetTransfersWithMetadataResult,
-} from "alchemy-sdk";
 import type {
   Address,
   ChainId,
   NormalizedTransaction,
 } from "@/types";
+import { CHAIN_NAMES } from "@/types";
 import { env, features } from "@/lib/env";
-import { sampleTransactions } from "./sample";
 
-const NETWORK_BY_CHAIN: Record<ChainId, Network> = {
-  1: Network.ETH_MAINNET,
-  11155111: Network.ETH_SEPOLIA,
-  8453: Network.BASE_MAINNET,
-  42161: Network.ARB_MAINNET,
+const ALCHEMY_BASE: Record<ChainId, string> = {
+  1: "https://eth-mainnet.g.alchemy.com/v2",
+  10: "https://opt-mainnet.g.alchemy.com/v2",
+  56: "https://bnb-mainnet.g.alchemy.com/v2",
+  137: "https://polygon-mainnet.g.alchemy.com/v2",
+  8453: "https://base-mainnet.g.alchemy.com/v2",
+  42161: "https://arb-mainnet.g.alchemy.com/v2",
+  43114: "https://avax-mainnet.g.alchemy.com/v2",
+  11155111: "https://eth-sepolia.g.alchemy.com/v2",
 };
 
-function client(chainId: ChainId) {
-  return new Alchemy({
-    apiKey: env.alchemyApiKey,
-    network: NETWORK_BY_CHAIN[chainId],
+export interface WalletFetchResult {
+  transactions: NormalizedTransaction[];
+  /** Set when this chain failed to load (empty transactions). */
+  error?: string;
+}
+
+interface AlchemyTransfer {
+  hash?: string;
+  uniqueId?: string;
+  from?: string;
+  to?: string | null;
+  value?: number | null;
+  asset?: string | null;
+  blockNum?: string;
+  metadata?: { blockTimestamp?: string };
+  rawContract?: { address?: string; decimal?: string };
+}
+
+interface AssetTransfersResponse {
+  transfers: AlchemyTransfer[];
+}
+
+async function alchemyRpc<T>(
+  chainId: ChainId,
+  method: string,
+  params: unknown[],
+): Promise<T> {
+  const url = `${ALCHEMY_BASE[chainId]}/${env.alchemyApiKey}`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+    cache: "no-store",
   });
+
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+  }
+
+  const json = (await res.json()) as { result?: T; error?: { message: string } };
+  if (json.error) {
+    throw new Error(json.error.message);
+  }
+  if (json.result === undefined) {
+    throw new Error("Alchemy returned an empty response.");
+  }
+  return json.result;
+}
+
+async function fetchTransfers(
+  chainId: ChainId,
+  filter: { fromAddress?: Address; toAddress?: Address },
+): Promise<AlchemyTransfer[]> {
+  const result = await alchemyRpc<AssetTransfersResponse>(
+    chainId,
+    "alchemy_getAssetTransfers",
+    [
+      {
+        ...filter,
+        category: ["external", "erc20", "internal"],
+        withMetadata: true,
+        maxCount: "0x64",
+        order: "desc",
+      },
+    ],
+  );
+  return result.transfers ?? [];
 }
 
 function lower(value?: string | null): string {
   return (value ?? "").toLowerCase();
 }
 
+function fetchErrorMessage(error: unknown): string {
+  const raw =
+    error instanceof Error ? error.message : "Unknown error while contacting Alchemy.";
+  return raw.replace(/\/v2\/[^\s"'\\]+/g, "/v2/***");
+}
+
 /**
- * Fetch and normalize a wallet's transaction history.
- *
- * Falls back to sample data when no Alchemy key is configured, so the
- * app remains demoable and testable without external credentials.
+ * Fetch and normalize a wallet's transaction history via Alchemy.
+ * Returns only real on-chain data — never synthetic fallbacks.
  */
 export async function getWalletTransactions(
   address: Address,
   chainId: ChainId = 1,
-): Promise<NormalizedTransaction[]> {
+): Promise<WalletFetchResult> {
   if (!features.onchain) {
-    return sampleTransactions(address);
+    return {
+      transactions: [],
+      error: "ALCHEMY_API_KEY is not configured.",
+    };
   }
 
-  const alchemy = client(chainId);
-  const category = [
-    AssetTransfersCategory.EXTERNAL,
-    AssetTransfersCategory.ERC20,
-    AssetTransfersCategory.INTERNAL,
-  ];
-  const base = {
-    category,
-    withMetadata: true as const,
-    maxCount: 100,
-    order: SortingOrder.DESCENDING,
-  };
+  try {
+    const [sent, received] = await Promise.all([
+      fetchTransfers(chainId, { fromAddress: address }),
+      fetchTransfers(chainId, { toAddress: address }),
+    ]);
 
-  const [sent, received] = await Promise.all([
-    alchemy.core.getAssetTransfers({ ...base, fromAddress: address }),
-    alchemy.core.getAssetTransfers({ ...base, toAddress: address }),
-  ]);
-
-  return groupTransfers(
-    [...sent.transfers, ...received.transfers],
-    address,
-    chainId,
-  );
+    return {
+      transactions: groupTransfers([...sent, ...received], address, chainId),
+    };
+  } catch (error) {
+    console.error(`[CryptoTaxKE] Alchemy fetch failed (${CHAIN_NAMES[chainId]}):`, error);
+    return {
+      transactions: [],
+      error: fetchErrorMessage(error),
+    };
+  }
 }
 
-/** Group flat transfer rows into per-hash normalized transactions. */
 function groupTransfers(
-  transfers: AssetTransfersWithMetadataResult[],
+  transfers: AlchemyTransfer[],
   address: Address,
   chainId: ChainId,
 ): NormalizedTransaction[] {
@@ -81,8 +139,9 @@ function groupTransfers(
   const addr = lower(address);
 
   for (const t of transfers) {
-    if (!t.hash || seen.has(t.uniqueId)) continue;
-    seen.add(t.uniqueId);
+    const uid = t.uniqueId ?? t.hash;
+    if (!t.hash || !uid || seen.has(uid)) continue;
+    seen.add(uid);
 
     const timestamp = t.metadata?.blockTimestamp
       ? Date.parse(t.metadata.blockTimestamp)

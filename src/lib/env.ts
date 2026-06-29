@@ -1,8 +1,5 @@
 /**
- * Centralized, typed access to environment variables.
- *
- * Keys are optional so the app runs in a "demo mode" (sample data, no AI)
- * when they are absent — useful for local development, CI, and grading.
+ * Environment variables. On-chain import requires ALCHEMY_API_KEY.
  */
 export const env = {
   alchemyApiKey: process.env.ALCHEMY_API_KEY ?? "",
@@ -11,8 +8,8 @@ export const env = {
 };
 
 export const features = {
-  /** Real on-chain ingestion is available only with an Alchemy key. */
+  /** Real on-chain ingestion requires an Alchemy API key. */
   onchain: Boolean(env.alchemyApiKey),
-  /** AI explanations/chat are available only with an OpenAI key. */
+  /** AI explanations/chat require an OpenAI key (templates used without it). */
   ai: Boolean(env.openaiApiKey),
 };

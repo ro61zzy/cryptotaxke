@@ -1,6 +1,7 @@
 import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
 import type { AnalyzedTransaction } from "@/lib/analysis";
 import { CATEGORY_META } from "@/lib/categories";
+import { CHAIN_NAMES } from "@/types";
 import { Badge } from "@/components/ui/Badge";
 import { formatToken, shortAddress } from "@/lib/utils";
 
@@ -22,7 +23,13 @@ function MovementLine({
   );
 }
 
-export function TransactionRow({ tx }: { tx: AnalyzedTransaction }) {
+export function TransactionRow({
+  tx,
+  showChain = false,
+}: {
+  tx: AnalyzedTransaction;
+  showChain?: boolean;
+}) {
   const meta = CATEGORY_META[tx.classification.category];
   const date = new Date(tx.timestamp).toLocaleDateString("en-KE", {
     year: "numeric",
@@ -44,6 +51,9 @@ export function TransactionRow({ tx }: { tx: AnalyzedTransaction }) {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <Badge tone={meta.tone}>{meta.label}</Badge>
+            {showChain && (
+              <Badge tone="neutral">{CHAIN_NAMES[tx.chainId]}</Badge>
+            )}
             {tx.explanation.taxable && <Badge tone="warning">Taxable</Badge>}
             {tx.classification.source === "ai" && (
               <Badge tone="brand">AI classified</Badge>

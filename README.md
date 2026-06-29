@@ -57,8 +57,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-Without API keys the app runs in **demo mode** using realistic sample data, so it
-is fully explorable and testable without credentials.
+Set `ALCHEMY_API_KEY` in `.env` for on-chain import. Without it, the dashboard explains what's missing — no fake data is shown.
 
 ## Scripts
 

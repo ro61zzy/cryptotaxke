@@ -8,39 +8,48 @@
 
 export type Address = `0x${string}`;
 
-/** Supported EVM networks (MVP focuses on Ethereum mainnet). */
-export type ChainId = 1 | 11155111 | 8453 | 42161;
+/** EVM networks supported via Alchemy. Same 0x address, different activity per chain. */
+export type ChainId = 1 | 10 | 56 | 137 | 8453 | 42161 | 43114 | 11155111;
 
 export const CHAIN_NAMES: Record<ChainId, string> = {
   1: "Ethereum",
-  11155111: "Sepolia",
+  10: "Optimism",
+  56: "BNB Chain",
+  137: "Polygon",
   8453: "Base",
   42161: "Arbitrum",
+  43114: "Avalanche",
+  11155111: "Sepolia",
 };
+
+/** Mainnet chains shown in the UI (order = priority). */
+export const SUPPORTED_CHAINS: ChainId[] = [
+  1, 8453, 137, 42161, 10, 56, 43114,
+];
+
+export type ChainScope = ChainId | "all";
 
 /**
  * Semantic transaction categories. These drive both the plain-English
  * explanations and the tax treatment.
  */
 export type TxCategory =
-  | "trade" // swap of one asset for another
-  | "transfer_in" // received assets from an external party
-  | "transfer_out" // sent assets to an external party
-  | "internal_transfer" // moved between the user's own wallets (non-taxable)
-  | "staking_reward" // income event
-  | "airdrop" // income event
-  | "liquidity" // LP deposit/withdraw
-  | "nft" // NFT purchase/sale
-  | "fee" // standalone gas/fee
-  | "contract_interaction" // generic contract call
+  | "trade"
+  | "transfer_in"
+  | "transfer_out"
+  | "internal_transfer"
+  | "staking_reward"
+  | "airdrop"
+  | "liquidity"
+  | "nft"
+  | "fee"
+  | "contract_interaction"
   | "unknown";
 
 /** A single asset movement within a transaction. */
 export interface AssetMovement {
   symbol: string;
-  /** Contract address for ERC-20s; null for the native asset (ETH). */
   contract: Address | null;
-  /** Human-readable amount (already adjusted for decimals). */
   amount: number;
   decimals: number;
   direction: "in" | "out";
@@ -50,27 +59,20 @@ export interface AssetMovement {
 export interface NormalizedTransaction {
   hash: string;
   chainId: ChainId;
-  /** Unix epoch milliseconds. */
   timestamp: number;
   blockNumber: number;
   from: Address;
   to: Address | null;
-  /** Net asset movements relative to the wallet being analyzed. */
   movements: AssetMovement[];
-  /** Gas fee paid in the native asset, if the wallet was the sender. */
   gasFeeEth: number;
-  /** Raw method selector (first 4 bytes of calldata), if any. */
   methodId?: string;
 }
 
 /** Output of the classification step. */
 export interface ClassificationResult {
   category: TxCategory;
-  /** 0–1 confidence from the classifier. */
   confidence: number;
-  /** Where the label came from, for transparency in the UI. */
   source: "heuristic" | "ai" | "user";
-  /** Short, human-readable rationale. */
   reasoning?: string;
 }
 
@@ -86,12 +88,11 @@ export interface TransactionExplanation {
 export interface TaxLot {
   symbol: string;
   amount: number;
-  /** Cost basis in KES at acquisition time (per whole unit). */
   unitCostKES: number;
   acquiredAt: number;
 }
 
-/** A realized disposal (sale/swap-out) matched against tax lots. */
+/** A realized disposal matched against tax lots. */
 export interface Disposal {
   symbol: string;
   amount: number;
@@ -108,9 +109,8 @@ export interface TaxSummary {
   realizedGainsKES: number;
   stakingIncomeKES: number;
   airdropIncomeKES: number;
-  /** Estimated tax owed under the configured rules. */
   estimatedTaxKES: number;
   disposals: Disposal[];
-  /** The ruleset version used to compute this estimate. */
   rulesetVersion: string;
 }
+
