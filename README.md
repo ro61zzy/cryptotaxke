@@ -12,14 +12,19 @@ a chat assistant grounded in Kenyan tax regulations.
 
 ---
 
+## Repository
+
+https://github.com/ro61zzy/cryptotaxke
+
 ## Live links
 
 | Deliverable | Link |
 | --- | --- |
 | Deployed app | _added when deployed_ |
-| Agile task board | _GitHub Project — added in planning_ |
+| Agile task board | _run [`scripts/setup-github-project.sh`](scripts/setup-github-project.sh), then paste the Project URL here_ |
 | Design & testing document | [`docs/design-and-testing.md`](docs/design-and-testing.md) |
 | Sprint plan & user stories | [`docs/sprint-plan.md`](docs/sprint-plan.md) |
+| Agile board setup guide | [`docs/agile-board.md`](docs/agile-board.md) |
 | Demo recording | _added at the end of Sprint 3_ |
 
 ## Features
