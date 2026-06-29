@@ -8,6 +8,7 @@ import { parseChainScope } from "@/lib/chains";
 import { Container } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Badge";
 import { ChainSwitcher } from "@/components/dashboard/ChainSwitcher";
+import { ChatPanel } from "@/components/dashboard/ChatPanel";
 import { TaxSummaryCards } from "@/components/dashboard/TaxSummaryCards";
 import { TransactionList } from "@/components/dashboard/TransactionList";
 import { shortAddress } from "@/lib/utils";
@@ -80,6 +81,8 @@ export default async function WalletResultsPage({
               showChain={chainScope === "all"}
             />
           </div>
+
+          <ChatPanel address={address} chainScope={chainScope} />
         </>
       )}
     </Container>

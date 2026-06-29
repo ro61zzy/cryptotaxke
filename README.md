@@ -20,7 +20,7 @@ https://github.com/ro61zzy/cryptotaxke
 
 | Deliverable | Link |
 | --- | --- |
-| Deployed app | _added when deployed_ |
+| Deployed app | _Set after Vercel deploy — add URL here_ |
 | Agile task board | [CryptoTaxKE — Capstone Sprint Board](https://github.com/users/ro61zzy/projects/3) |
 | Design & testing document | [`docs/design-and-testing.md`](docs/design-and-testing.md) |
 | Sprint plan & user stories | [`docs/sprint-plan.md`](docs/sprint-plan.md) |
@@ -58,6 +58,17 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000).
 
 Set `ALCHEMY_API_KEY` in `.env` for on-chain import. Without it, the dashboard explains what's missing — no fake data is shown.
+
+## Deploy on Vercel
+
+1. Push latest code to GitHub (`git push origin main`)
+2. Import the repo at [vercel.com](https://vercel.com) (already done)
+3. **Project → Settings → Environment Variables** — add:
+   - `ALCHEMY_API_KEY` — your Alchemy key (all EVM chains)
+   - `OPENAI_API_KEY` — for AI explanations and chat
+4. Redeploy after adding env vars
+
+If the build fails with `Module not found: chains`, the GitHub repo is behind local — push the latest commits.
 
 ## Scripts
 

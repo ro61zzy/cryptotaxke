@@ -74,11 +74,11 @@ _As a user, I want a sentence explaining each transaction._
 
 **US-11 — Ask questions about my data**
 _As a user, I want to ask "how much profit did I make this year?"_
-- [ ] Chat answers questions grounded in the user's transactions
+- [x] Chat answers questions grounded in the user's transactions
 
 **US-12 — Grounded tax answers (RAG)**
-- [ ] Knowledge base of Kenyan tax guidance is embedded (pgvector)
-- [ ] Tax answers cite their sources
+- [x] Knowledge base of Kenyan tax guidance is embedded (pgvector)
+- [x] Tax answers cite their sources
 
 **US-13 — Polish & hardening**
 - [ ] Loading and error states throughout
