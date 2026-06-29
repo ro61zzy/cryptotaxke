@@ -12,7 +12,7 @@ const features = [
   {
     icon: Wallet,
     title: "Automatic import",
-    body: "Paste a 0x address to pull in swaps, transfers, staking rewards and more.",
+    body: "Connect MetaMask or paste a 0x address to pull in swaps, transfers, staking rewards and more.",
   },
   {
     icon: MessagesSquare,

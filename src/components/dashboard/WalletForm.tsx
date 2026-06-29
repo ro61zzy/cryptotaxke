@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { isAddress } from "viem";
-import { Loader2, Search } from "lucide-react";
+import { Loader2, Search, Wallet } from "lucide-react";
 import type { ChainScope } from "@/types";
 import { chainQueryParam } from "@/lib/chains";
+import { connectMetaMaskAddress, hasMetaMask } from "@/lib/wallet/metamask";
 import { Button } from "@/components/ui/Button";
 import { ChainSelect } from "./ChainSelect";
 
@@ -16,7 +17,15 @@ export function WalletForm() {
   const [value, setValue] = useState("");
   const [chain, setChain] = useState<ChainScope>("all");
   const [error, setError] = useState<string | null>(null);
+  const [metaMaskAvailable, setMetaMaskAvailable] = useState(false);
+  const [connecting, setConnecting] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    setMetaMaskAvailable(hasMetaMask());
+  }, []);
+
+  const busy = isPending || connecting;
 
   function submit(address: string, chainScope: ChainScope = chain) {
     const trimmed = address.trim();
@@ -32,8 +41,58 @@ export function WalletForm() {
     });
   }
 
+  async function connectAndAnalyze() {
+    setError(null);
+    setConnecting(true);
+    try {
+      const address = await connectMetaMaskAddress();
+      setValue(address);
+      submit(address);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not connect MetaMask.");
+    } finally {
+      setConnecting(false);
+    }
+  }
+
   return (
     <div>
+      {metaMaskAvailable && (
+        <Button
+          type="button"
+          variant="secondary"
+          size="lg"
+          className="w-full"
+          disabled={busy}
+          onClick={connectAndAnalyze}
+        >
+          {connecting ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Connecting…
+            </>
+          ) : (
+            <>
+              <Wallet className="h-4 w-4" />
+              Connect MetaMask
+            </>
+          )}
+        </Button>
+      )}
+
+      <div className={metaMaskAvailable ? "relative my-5" : undefined}>
+        {metaMaskAvailable && (
+          <div className="absolute inset-0 flex items-center" aria-hidden>
+            <div className="w-full border-t border-line" />
+          </div>
+        )}
+        {metaMaskAvailable && (
+          <p className="relative mx-auto w-fit bg-background px-3 text-xs text-muted">
+            or paste an address
+          </p>
+        )}
+      </div>
+
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -47,16 +106,16 @@ export function WalletForm() {
             onChange={(e) => setValue(e.target.value)}
             placeholder="0x..."
             spellCheck={false}
-            disabled={isPending}
+            disabled={busy}
             className="h-12 flex-1 rounded-lg border border-line bg-surface px-4 font-mono text-sm text-foreground outline-none placeholder:text-muted focus:border-brand disabled:opacity-60"
           />
           <ChainSelect
             value={chain}
             onChange={setChain}
-            disabled={isPending}
+            disabled={busy}
             className="sm:min-w-[11rem]"
           />
-          <Button type="submit" size="lg" disabled={isPending} aria-busy={isPending}>
+          <Button type="submit" size="lg" disabled={busy} aria-busy={isPending}>
             {isPending ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -73,7 +132,8 @@ export function WalletForm() {
       </form>
 
       <p className="mt-2 text-xs text-muted">
-        Supports Ethereum, Base, Polygon, and BNB Chain. More networks coming later.
+        Read-only: we only fetch public on-chain data. No private keys, no
+        signatures. Supports Ethereum, Base, Polygon, and BNB Chain.
       </p>
 
       {error && <p className="mt-2 text-sm text-danger">{error}</p>}
@@ -87,7 +147,7 @@ export function WalletForm() {
 
       <button
         type="button"
-        disabled={isPending}
+        disabled={busy}
         onClick={() => submit(SAMPLE_ADDRESS)}
         className="mt-4 text-sm text-muted underline-offset-4 hover:text-foreground hover:underline disabled:opacity-50"
       >
