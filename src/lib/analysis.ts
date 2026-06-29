@@ -119,7 +119,6 @@ export async function analyzeWallet(
     computePortfolioValueKES(sorted),
   ]);
 
-  const chainCount = chainScope === "all" ? SUPPORTED_CHAINS.length : 1;
   const partialErrors =
     fetch.chainErrors.length > 0 && sorted.length > 0
       ? `Some chains could not be loaded: ${fetch.chainErrors.join(" · ")}`

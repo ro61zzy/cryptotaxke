@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState, useSyncExternalStore, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { isAddress } from "viem";
 import { Loader2, Search, Wallet } from "lucide-react";
@@ -17,13 +17,13 @@ export function WalletForm() {
   const [value, setValue] = useState("");
   const [chain, setChain] = useState<ChainScope>("all");
   const [error, setError] = useState<string | null>(null);
-  const [metaMaskAvailable, setMetaMaskAvailable] = useState(false);
   const [connecting, setConnecting] = useState(false);
   const [isPending, startTransition] = useTransition();
-
-  useEffect(() => {
-    setMetaMaskAvailable(hasMetaMask());
-  }, []);
+  const metaMaskAvailable = useSyncExternalStore(
+    () => () => {},
+    () => hasMetaMask(),
+    () => false,
+  );
 
   const busy = isPending || connecting;
 

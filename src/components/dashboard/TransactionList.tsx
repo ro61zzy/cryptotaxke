@@ -1,5 +1,4 @@
 import type { AnalyzedTransaction } from "@/lib/analysis";
-import { CHAIN_NAMES } from "@/types";
 import { TransactionRow } from "./TransactionRow";
 
 export function TransactionList({

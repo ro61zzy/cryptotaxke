@@ -40,10 +40,6 @@ function cacheKey(symbol: string, timestamp: number): string {
   return `${symbol}:${day}`;
 }
 
-function fxCacheKey(timestamp: number): string {
-  return new Date(timestamp).toISOString().slice(0, 10);
-}
-
 async function fetchUsdToKes(date: string): Promise<number> {
   const cached = fxCache.get(date);
   if (cached) return cached;
