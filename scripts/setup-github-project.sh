@@ -157,10 +157,29 @@ create_issue "US-14" "sprint-3" "Delivery" \
 - [ ] Repository shared with quantic-grader"
 
 echo "Creating GitHub Project board…"
-project_url=$(gh project create \
+project_json=$(gh project create \
   --owner "$OWNER" \
   --title "CryptoTaxKE — Capstone Sprint Board" \
-  --format board)
+  --format json)
+
+project_url=$(echo "$project_json" | gh api graphql -f query='' 2>/dev/null || true)
+
+# Parse project URL from JSON (gh returns id, number, url fields)
+project_url=$(python3 -c "import json,sys; d=json.loads('''$project_json'''); print(d.get('url',''))" 2>/dev/null || echo "")
+
+if [[ -z "$project_url" ]]; then
+  project_number=$(python3 -c "import json,sys; d=json.loads('''$project_json'''); print(d.get('number',''))" 2>/dev/null || echo "")
+  project_url="https://github.com/users/$OWNER/projects/$project_number"
+fi
+
+echo "Adding issues to the project board…"
+project_number=$(python3 -c "import json,sys; d=json.loads('''$project_json'''); print(d.get('number',''))" 2>/dev/null || echo "1")
+
+for i in $(seq 1 14); do
+  gh project item-add "$project_number" \
+    --owner "$OWNER" \
+    --url "https://github.com/$REPO/issues/$i" >/dev/null 2>&1 || true
+done
 
 echo ""
 echo "Done."

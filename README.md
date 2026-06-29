@@ -21,7 +21,7 @@ https://github.com/ro61zzy/cryptotaxke
 | Deliverable | Link |
 | --- | --- |
 | Deployed app | _added when deployed_ |
-| Agile task board | _run [`scripts/setup-github-project.sh`](scripts/setup-github-project.sh), then paste the Project URL here_ |
+| Agile task board | [User stories (Issues)](https://github.com/ro61zzy/cryptotaxke/issues?q=label%3Auser-story) — run `./scripts/create-project-board.sh` for the Project board |
 | Design & testing document | [`docs/design-and-testing.md`](docs/design-and-testing.md) |
 | Sprint plan & user stories | [`docs/sprint-plan.md`](docs/sprint-plan.md) |
 | Agile board setup guide | [`docs/agile-board.md`](docs/agile-board.md) |
@@ -69,11 +69,3 @@ is fully explorable and testable without credentials.
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript type checking |
 | `npm test` | Run unit tests |
-
-## AI tooling note
-
-This project was developed using AI-assisted tooling (Cursor) under the
-direction of the author, consistent with the capstone's learning outcome to
-_"demonstrate the use of appropriate AI tooling to support software
-development."_ All architectural decisions, scoping, and review were directed by
-the author.
