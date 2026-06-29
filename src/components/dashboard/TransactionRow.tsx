@@ -15,10 +15,7 @@ function MovementLine({
 }) {
   const isIn = direction === "in";
   return (
-    <span
-      className={isIn ? "text-positive" : "text-foreground"}
-      title={`${isIn ? "Received" : "Sent"} ${amount} ${symbol}`}
-    >
+    <span className={isIn ? "text-positive" : "text-foreground"}>
       {isIn ? "+" : "−"}
       {formatToken(amount, symbol)}
     </span>
@@ -34,38 +31,46 @@ export function TransactionRow({ tx }: { tx: AnalyzedTransaction }) {
   });
 
   return (
-    <div className="flex items-center gap-4 border-b border-line/60 px-4 py-4 last:border-0 hover:bg-surface-2/50">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-2">
-        {tx.movements.some((m) => m.direction === "in") ? (
-          <ArrowDownLeft className="h-4 w-4 text-positive" />
-        ) : (
-          <ArrowUpRight className="h-4 w-4 text-muted" />
-        )}
-      </span>
+    <div className="border-b border-line/60 px-4 py-4 last:border-0 hover:bg-surface-2/50">
+      <div className="flex items-start gap-4">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-2">
+          {tx.movements.some((m) => m.direction === "in") ? (
+            <ArrowDownLeft className="h-4 w-4 text-positive" />
+          ) : (
+            <ArrowUpRight className="h-4 w-4 text-muted" />
+          )}
+        </span>
 
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <Badge tone={meta.tone}>{meta.label}</Badge>
-          {meta.taxable && <Badge tone="warning">Taxable</Badge>}
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge tone={meta.tone}>{meta.label}</Badge>
+            {tx.explanation.taxable && <Badge tone="warning">Taxable</Badge>}
+            {tx.classification.source === "ai" && (
+              <Badge tone="brand">AI classified</Badge>
+            )}
+          </div>
+
+          <p className="mt-2 text-sm text-foreground">{tx.explanation.summary}</p>
+
+          <p className="mt-1 text-xs text-muted">
+            {date} · {shortAddress(tx.hash, 6)}
+          </p>
         </div>
-        <p className="mt-1 truncate text-xs text-muted">
-          {date} · {shortAddress(tx.hash, 6)}
-        </p>
-      </div>
 
-      <div className="flex flex-col items-end gap-0.5 text-sm font-medium">
-        {tx.movements.length > 0 ? (
-          tx.movements.map((m, i) => (
-            <MovementLine
-              key={i}
-              direction={m.direction}
-              amount={m.amount}
-              symbol={m.symbol}
-            />
-          ))
-        ) : (
-          <span className="text-muted">—</span>
-        )}
+        <div className="flex shrink-0 flex-col items-end gap-0.5 text-sm font-medium">
+          {tx.movements.length > 0 ? (
+            tx.movements.map((m, i) => (
+              <MovementLine
+                key={i}
+                direction={m.direction}
+                amount={m.amount}
+                symbol={m.symbol}
+              />
+            ))
+          ) : (
+            <span className="text-muted">—</span>
+          )}
+        </div>
       </div>
     </div>
   );

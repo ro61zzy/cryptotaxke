@@ -49,26 +49,26 @@ _As a user, I want each transaction labeled (trade, transfer, etc.)._
 
 **US-6 — Plain-English explanations**
 _As a user, I want a sentence explaining each transaction._
-- [ ] AI generates a one-line summary per transaction (structured output)
-- [ ] Explanations state whether the event is taxable
+- [x] AI generates a one-line summary per transaction (structured output)
+- [x] Explanations state whether the event is taxable
 
 **US-7 — AI-assisted classification for ambiguous cases**
-- [ ] Low-confidence heuristic results are escalated to the AI classifier
+- [x] Low-confidence heuristic results are escalated to the AI classifier
 - [ ] Users can override a label
 
 **US-8 — Historical pricing in KES**
-- [ ] Asset prices at transaction time are fetched and cached
-- [ ] USD→KES conversion applied
+- [x] Asset prices at transaction time are fetched and cached
+- [x] USD→KES conversion applied
 
 **US-9 — Capital gains (FIFO)**
-- [ ] FIFO cost-basis engine matches disposals to acquisitions
-- [ ] Realized gains computed in KES
+- [x] FIFO cost-basis engine matches disposals to acquisitions
+- [x] Realized gains computed in KES
 - [ ] Engine covered by unit tests
 
 **US-10 — Dashboard & tax estimate**
-- [ ] Portfolio value, capital gains, and staking income shown
-- [ ] Tax estimate computed from a configurable, versioned ruleset
-- [ ] Disclaimer shown
+- [x] Portfolio value, capital gains, and staking income shown
+- [x] Tax estimate computed from a configurable, versioned ruleset
+- [x] Disclaimer shown
 
 ### Sprint 3 — RAG chat, polish & delivery
 

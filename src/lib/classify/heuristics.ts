@@ -9,6 +9,9 @@ import type {
  * classifier is only consulted for low-confidence cases (see analysis.ts).
  * Keeping obvious cases here makes the system cheaper, faster, and auditable.
  */
+const BEACON_DEPOSIT =
+  "0x00000000219ab540356cbb839cbe05303d7705fa";
+
 export function classifyHeuristic(
   tx: NormalizedTransaction,
   wallet: Address,
@@ -16,6 +19,15 @@ export function classifyHeuristic(
   const w = wallet.toLowerCase();
   const ins = tx.movements.filter((m) => m.direction === "in");
   const outs = tx.movements.filter((m) => m.direction === "out");
+
+  if (tx.from?.toLowerCase() === BEACON_DEPOSIT && ins.some((m) => m.symbol === "ETH")) {
+    return {
+      category: "staking_reward",
+      confidence: 0.82,
+      source: "heuristic",
+      reasoning: "ETH received from the beacon chain deposit contract (likely staking reward).",
+    };
+  }
 
   if (tx.from?.toLowerCase() === w && tx.to?.toLowerCase() === w) {
     return {

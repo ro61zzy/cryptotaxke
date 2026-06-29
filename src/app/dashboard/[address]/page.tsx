@@ -6,6 +6,7 @@ import type { Address } from "@/types";
 import { analyzeWallet } from "@/lib/analysis";
 import { Container } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Badge";
+import { TaxSummaryCards } from "@/components/dashboard/TaxSummaryCards";
 import { TransactionList } from "@/components/dashboard/TransactionList";
 import { shortAddress } from "@/lib/utils";
 
@@ -39,13 +40,19 @@ export default async function WalletResultsPage({
         <div className="mt-6 flex items-start gap-3 rounded-lg border border-line bg-surface-2 p-4 text-sm text-muted">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
           <p>
-            Showing <span className="text-foreground">sample data</span>. Add an
-            Alchemy API key to import this wallet&apos;s real on-chain history.
+            Showing <span className="text-foreground">sample data</span>. Add
+            API keys in <code className="text-foreground">.env</code> for live
+            on-chain data and AI explanations.
           </p>
         </div>
       )}
 
-      <div className="mt-8 flex items-center justify-between">
+      <div className="mt-8">
+        <h2 className="mb-4 text-lg font-medium">Tax summary</h2>
+        <TaxSummaryCards analysis={analysis} />
+      </div>
+
+      <div className="mt-10 flex items-center justify-between">
         <h2 className="text-lg font-medium">Transactions</h2>
         <Badge tone="neutral">{analysis.transactions.length} total</Badge>
       </div>
