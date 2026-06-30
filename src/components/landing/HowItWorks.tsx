@@ -4,7 +4,7 @@ const steps = [
   {
     step: "01",
     title: "Connect or paste",
-    body: "Connect MetaMask to fill your address automatically, or paste a 0x address. Read-only: no private keys, ever.",
+    body: "Connect a browser wallet to fill your address automatically, or paste a 0x address. Read-only: no private keys, ever.",
   },
   {
     step: "02",

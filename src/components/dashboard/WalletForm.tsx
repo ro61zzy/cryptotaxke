@@ -6,11 +6,21 @@ import { isAddress } from "viem";
 import { Loader2, Search, Wallet } from "lucide-react";
 import type { ChainScope } from "@/types";
 import { chainQueryParam } from "@/lib/chains";
-import { connectMetaMaskAddress, hasMetaMask } from "@/lib/wallet/metamask";
+import {
+  connectBrowserWalletAddress,
+  getBrowserWalletName,
+  hasBrowserWallet,
+} from "@/lib/wallet/metamask";
 import { Button } from "@/components/ui/Button";
 import { ChainSelect } from "./ChainSelect";
 
 const SAMPLE_ADDRESS = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"; // vitalik.eth
+
+const WALLET_INSTALL_LINKS = [
+  { name: "MetaMask", href: "https://metamask.io/download/" },
+  { name: "Brave Wallet", href: "https://brave.com/wallet/" },
+  { name: "Coinbase Wallet", href: "https://www.coinbase.com/wallet/downloads" },
+] as const;
 
 export function WalletForm() {
   const router = useRouter();
@@ -19,10 +29,15 @@ export function WalletForm() {
   const [error, setError] = useState<string | null>(null);
   const [connecting, setConnecting] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const metaMaskAvailable = useSyncExternalStore(
+  const walletAvailable = useSyncExternalStore(
     () => () => {},
-    () => hasMetaMask(),
+    () => hasBrowserWallet(),
     () => false,
+  );
+  const walletName = useSyncExternalStore(
+    () => () => {},
+    () => getBrowserWalletName(),
+    () => "browser wallet",
   );
 
   const busy = isPending || connecting;
@@ -45,11 +60,11 @@ export function WalletForm() {
     setError(null);
     setConnecting(true);
     try {
-      const address = await connectMetaMaskAddress();
+      const address = await connectBrowserWalletAddress();
       setValue(address);
       submit(address);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not connect MetaMask.");
+      setError(err instanceof Error ? err.message : "Could not connect wallet.");
     } finally {
       setConnecting(false);
     }
@@ -57,7 +72,7 @@ export function WalletForm() {
 
   return (
     <div>
-      {metaMaskAvailable && (
+      {walletAvailable ? (
         <Button
           type="button"
           variant="secondary"
@@ -74,23 +89,44 @@ export function WalletForm() {
           ) : (
             <>
               <Wallet className="h-4 w-4" />
-              Connect MetaMask
+              Connect {walletName}
             </>
           )}
         </Button>
+      ) : (
+        <div className="rounded-lg border border-line bg-surface-2 p-4 text-sm">
+          <p className="font-medium text-foreground">No browser wallet detected</p>
+          <p className="mt-2 text-muted">
+            You can still paste any <code className="text-foreground">0x…</code> address
+            below. To connect with one click, install a browser wallet such as{" "}
+            {WALLET_INSTALL_LINKS.map((wallet, index) => (
+              <span key={wallet.name}>
+                {index > 0 && (index === WALLET_INSTALL_LINKS.length - 1 ? ", or " : ", ")}
+                <a
+                  href={wallet.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand hover:underline"
+                >
+                  {wallet.name}
+                </a>
+              </span>
+            ))}
+            , then refresh this page.
+          </p>
+          <p className="mt-2 text-xs text-muted">
+            Using Brave? Enable the built-in wallet under Settings → Web3.
+          </p>
+        </div>
       )}
 
-      <div className={metaMaskAvailable ? "relative my-5" : undefined}>
-        {metaMaskAvailable && (
-          <div className="absolute inset-0 flex items-center" aria-hidden>
-            <div className="w-full border-t border-line" />
-          </div>
-        )}
-        {metaMaskAvailable && (
-          <p className="relative mx-auto w-fit bg-background px-3 text-xs text-muted">
-            or paste an address
-          </p>
-        )}
+      <div className="relative my-5">
+        <div className="absolute inset-0 flex items-center" aria-hidden>
+          <div className="w-full border-t border-line" />
+        </div>
+        <p className="relative mx-auto w-fit bg-background px-3 text-xs text-muted">
+          {walletAvailable ? "or paste an address" : "paste an address"}
+        </p>
       </div>
 
       <form

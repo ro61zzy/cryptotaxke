@@ -19,7 +19,7 @@ export function Hero() {
         </h1>
 
         <p className="mt-6 max-w-2xl text-lg text-muted">
-          Connect MetaMask or paste a wallet address, and CryptoTaxKE imports your
+          Connect a browser wallet or paste a wallet address, and CryptoTaxKE imports your
           transactions, explains each one, calculates your gains in KES, and
           estimates your tax under current KRA rules, with answers you can actually
           understand.

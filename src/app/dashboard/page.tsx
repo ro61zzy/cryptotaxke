@@ -7,7 +7,7 @@ export default function DashboardPage() {
       <div className="mx-auto max-w-2xl text-center">
         <h1 className="text-3xl font-semibold tracking-tight">Analyze a wallet</h1>
         <p className="mt-3 text-muted">
-          Connect MetaMask or paste a <code className="text-foreground">0x…</code>{" "}
+          Connect a browser wallet or paste a <code className="text-foreground">0x…</code>{" "}
           address to import real on-chain transactions. Read-only: we never ask for
           private keys or signatures.
         </p>
