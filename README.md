@@ -1,6 +1,5 @@
 # CryptoTaxKE
 
-**An AI-powered crypto tax assistant built for Kenyan users.**
 
 Existing crypto tax tools (Koinly, CoinTracker) are built for US/EU users, are
 expensive, and never explain anything in plain language. CryptoTaxKE imports a
