@@ -81,7 +81,8 @@ _As a user, I want to ask "how much profit did I make this year?"_
 - [x] Tax answers cite their sources
 
 **US-13 — Polish & hardening**
-- [ ] Loading and error states throughout
+- [x] Loading and error states throughout
+- [x] Unit and component test coverage across core modules
 - [ ] Input validation and rate limiting on API routes
 
 **US-14 — Delivery**

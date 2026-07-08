@@ -42,7 +42,9 @@ describe("classifyHeuristic", () => {
         { symbol: "USDC", contract: OTHER, amount: 1500, decimals: 6, direction: "in" },
       ],
     });
-    expect(classifyHeuristic(tx, WALLET).category).toBe("transfer_in");
+    const result = classifyHeuristic(tx, WALLET);
+    expect(result.category).toBe("transfer_in");
+    expect(result.confidence).toBeGreaterThanOrEqual(0.7);
   });
 
   it("labels an outbound-only transfer as transfer_out", () => {

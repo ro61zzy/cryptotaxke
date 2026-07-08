@@ -86,4 +86,59 @@ describe("computeTaxSummary", () => {
     expect(summary.stakingIncomeKES).toBeGreaterThan(0);
     expect(summary.disposals).toHaveLength(0);
   });
+
+  it("uses oldest lots first when multiple acquisitions exist", async () => {
+    const firstBuy = tx({
+      hash: "0xbuy1",
+      timestamp: Date.UTC(2024, 0, 1),
+      movements: [{ symbol: "ETH", contract: null, amount: 1, decimals: 18, direction: "in" }],
+    });
+
+    const secondBuy = tx({
+      hash: "0xbuy2",
+      timestamp: Date.UTC(2024, 3, 1),
+      movements: [{ symbol: "ETH", contract: null, amount: 1, decimals: 18, direction: "in" }],
+    });
+
+    const sell = tx({
+      hash: "0xsell",
+      timestamp: Date.UTC(2024, 6, 1),
+      movements: [{ symbol: "ETH", contract: null, amount: 1, decimals: 18, direction: "out" }],
+      classification: {
+        category: "trade",
+        confidence: 0.9,
+        source: "heuristic",
+      },
+    });
+
+    const summary = await computeTaxSummary([sell, secondBuy, firstBuy]);
+
+    expect(summary.disposals).toHaveLength(1);
+    expect(summary.disposals[0].amount).toBe(1);
+    expect(summary.disposals[0].costBasisKES).toBeGreaterThan(0);
+  });
+
+  it("ignores transfer_out for realized gains", async () => {
+    const buy = tx({
+      hash: "0xbuy",
+      timestamp: Date.UTC(2024, 0, 1),
+      movements: [{ symbol: "ETH", contract: null, amount: 1, decimals: 18, direction: "in" }],
+    });
+
+    const send = tx({
+      hash: "0xsend",
+      timestamp: Date.UTC(2024, 1, 1),
+      movements: [{ symbol: "ETH", contract: null, amount: 0.25, decimals: 18, direction: "out" }],
+      classification: {
+        category: "transfer_out",
+        confidence: 0.75,
+        source: "heuristic",
+      },
+    });
+
+    const summary = await computeTaxSummary([send, buy]);
+
+    expect(summary.disposals).toHaveLength(0);
+    expect(summary.realizedGainsKES).toBe(0);
+  });
 });

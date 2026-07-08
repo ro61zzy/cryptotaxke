@@ -62,15 +62,43 @@ cost-basis engine to produce `Disposal`s and a `TaxSummary`.
 
 ## 5. Testing strategy
 
+Testing is part of the SDLC for every sprint: write code, add or extend tests,
+run locally with `npm test`, then let GitHub Actions enforce the same checks on
+push.
+
 | Layer | Tooling | What is tested |
 | --- | --- | --- |
-| Unit | Vitest | Classification heuristics, cost-basis math, formatting utils |
-| Component | Testing Library | Key UI components render expected states |
-| E2E | Playwright | Analyze-a-wallet happy path (planned, Sprint 3) |
-| CI | GitHub Actions | Lint, typecheck, unit tests, and build on every push |
+| Unit | Vitest | Classification, FIFO, tax rules, chains, RAG keywords, wallet helpers, formatting, AI error handling |
+| Component | Testing Library + jsdom | Wallet form validation, no-wallet guidance, navigation on analyze |
+| CI | GitHub Actions | Lint, typecheck, **41 unit/component tests**, and production build on every push |
 
-Test cases are written for the deterministic core (classification, FIFO
-accounting) because correctness there is essential and easily verified.
+### Test inventory (`src/**/*.test.ts`)
+
+| Module | File | Covers |
+| --- | --- | --- |
+| Classification heuristics | `lib/classify/heuristics.test.ts` | Trades, transfers, internal moves, confidence thresholds |
+| AI classification gate | `lib/classify/ai.test.ts` | When low-confidence txs escalate vs skip AI |
+| Plain-English templates | `lib/explain/templates.test.ts` | Swap summaries and taxability flags |
+| FIFO cost basis | `lib/tax/fifo.test.ts` | Lot matching, staking income, multi-lot FIFO, transfer_out exclusion |
+| Tax rules | `lib/tax/rules.test.ts` | Effective rate and negative-gain handling |
+| Chain scope | `lib/chains.test.ts` | URL parsing, labels, supported networks |
+| RAG retrieval | `lib/rag/search.test.ts` | Keyword search over Kenyan tax knowledge |
+| Browser wallet | `lib/wallet/metamask.test.ts` | Provider detection, connect flow, error cases |
+| Formatting utils | `lib/utils.test.ts` | KES formatting, address shortening |
+| OpenAI client | `lib/ai/client.test.ts` | User-facing quota and API-key errors |
+| Dashboard form | `components/dashboard/WalletForm.test.tsx` | Validation, routing, missing-wallet messaging |
+
+### How to run
+
+```bash
+npm test          # single run (CI uses this)
+npm run test:watch  # during development
+```
+
+Deterministic business logic (classification, FIFO, tax math) has the strongest
+coverage because correctness there is essential and does not require external
+APIs. AI and Alchemy integrations are mocked or exercised through adapter
+fallbacks so tests stay fast and reliable in CI.
 
 ## 6. Tax rules context (Kenya)
 
