@@ -5,12 +5,12 @@ describe("formatOpenAiError", () => {
   it("maps quota errors to a user-friendly message", () => {
     const message = formatOpenAiError(new Error("429 You exceeded your current quota"));
     expect(message).toContain("quota exceeded");
-    expect(message).toContain("platform.openai.com");
+    expect(message).toContain("Groq");
   });
 
   it("maps invalid API key errors", () => {
     const message = formatOpenAiError(new Error("401 Invalid API key"));
-    expect(message).toContain("OPENAI_API_KEY");
+    expect(message).toContain("GROQ_API_KEY");
   });
 
   it("returns the original message for unknown errors", () => {

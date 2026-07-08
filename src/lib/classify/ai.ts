@@ -5,7 +5,7 @@ import type {
   NormalizedTransaction,
   TxCategory,
 } from "@/types";
-import { getOpenAIClient } from "@/lib/ai/client";
+import { getChatModel, getOpenAIClient } from "@/lib/ai/client";
 
 const AI_CONFIDENCE_THRESHOLD = 0.7;
 
@@ -48,7 +48,7 @@ export async function classifyWithAi(
 
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: getChatModel(),
       temperature: 0.1,
       response_format: { type: "json_object" },
       messages: [

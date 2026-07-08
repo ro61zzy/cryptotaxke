@@ -3,7 +3,7 @@ import { isAddress } from "viem";
 import { NextResponse } from "next/server";
 import { analyzeWallet } from "@/lib/analysis";
 import { parseChainScope } from "@/lib/chains";
-import { getOpenAIClient, formatOpenAiError } from "@/lib/ai/client";
+import { getChatModel, getOpenAIClient, formatOpenAiError } from "@/lib/ai/client";
 import { retrieveKnowledge, formatCitations } from "@/lib/rag/search";
 import { formatKES } from "@/lib/utils";
 import type { Address, ChainScope } from "@/types";
@@ -50,7 +50,10 @@ export async function POST(req: Request) {
     const openai = getOpenAIClient();
     if (!openai) {
       return NextResponse.json(
-        { error: "OPENAI_API_KEY is not configured." },
+        {
+          error:
+            "No AI provider configured. Add GROQ_API_KEY (free at console.groq.com) or OPENAI_API_KEY to .env and Vercel.",
+        },
         { status: 503 },
       );
     }
@@ -74,7 +77,7 @@ export async function POST(req: Request) {
     const walletContext = buildWalletContext(analysis);
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: getChatModel(),
       temperature: 0.3,
       messages: [
         {

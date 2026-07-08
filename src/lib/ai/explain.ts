@@ -4,7 +4,7 @@ import type {
   NormalizedTransaction,
   TransactionExplanation,
 } from "@/types";
-import { getOpenAIClient } from "./client";
+import { getChatModel, getOpenAIClient } from "./client";
 import { explainWithTemplate } from "@/lib/explain/templates";
 
 const explanationSchema = z.object({
@@ -32,7 +32,7 @@ export async function explainTransaction(
 
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: getChatModel(),
       temperature: 0.2,
       response_format: { type: "json_object" },
       messages: [
