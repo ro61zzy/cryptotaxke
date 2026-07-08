@@ -1,8 +1,7 @@
-# CryptoTaxKE — Design & Testing Document
+# CryptoTaxKE - Design & Testing Document
 
-_This document is maintained throughout the project and finalized in Sprint 3.
-It records architecture and design decisions (and the reasoning behind them),
-deployment recommendations, and the testing strategy._
+_Finalized for capstone submission, July 2026. Records architecture, design
+decisions, deployment, and the testing strategy._
 
 ## 1. Problem & scope
 
@@ -19,7 +18,7 @@ Solana/BTC, live exchange APIs.
 ## 2. Architecture overview
 
 A single Next.js application (frontend + API routes) with external services
-(Alchemy for on-chain data, OpenAI for AI, CoinGecko/Frankfurter for pricing).
+(Alchemy for on-chain data, Groq/OpenAI for AI, CoinGecko/Frankfurter for pricing).
 This keeps deployment and operations simple for a solo project while preserving
 clean internal boundaries.
 
@@ -31,9 +30,9 @@ Browser ──> Next.js (App Router)
                   ├─ chain/    (Alchemy adapter, normalization)
                   ├─ classify/ (heuristics + AI)
                   ├─ tax/      (FIFO cost-basis engine)
-                  ├─ ai/       (provider adapter, RAG)
-                  └─ db/       (Prisma repository)
-External: Alchemy (on-chain) · OpenAI (LLM/embeddings) · Postgres+pgvector
+                  ├─ ai/       (LLM provider adapter, RAG)
+                  └─ rag/      (Kenyan tax knowledge base)
+External: Alchemy · Groq/OpenAI/DeepSeek · CoinGecko · Frankfurter
 ```
 
 ## 3. Key design decisions
@@ -44,15 +43,15 @@ External: Alchemy (on-chain) · OpenAI (LLM/embeddings) · Postgres+pgvector
 | On-chain access | Alchemy HTTP adapter | Reliable indexed transfer history; adapter isolates the vendor |
 | Storage model | In-memory analysis per request | No DB required for MVP; honest empty states when keys missing |
 | Classification | Heuristics first, AI fallback | Cheap, fast, auditable for obvious cases; AI only where needed |
-| AI provider | Behind an adapter | Swappable provider; testable without network |
+| AI provider | Adapter (Groq / DeepSeek / OpenAI) | Free Groq tier for demo; swappable via env keys |
+| RAG | In-memory keyword search | Small curated knowledge base; no DB required |
 | Tax rules | Configurable, versioned ruleset | Kenyan rules change often (see §6); estimates stay maintainable |
 | Chat context | Lightweight re-analysis | Chat skips per-tx AI to stay within serverless timeouts |
 
 ### Design patterns used
-- **Adapter** — `lib/chain` and `lib/ai` wrap third-party SDKs behind stable interfaces.
-- **Strategy** — classification chooses between heuristic and AI strategies by confidence.
-- **Repository** — `lib/db` mediates all persistence.
-- **Layered architecture** — UI → services (`lib/*`) → adapters → external systems.
+- **Adapter** - `lib/chain` and `lib/ai` wrap third-party SDKs behind stable interfaces.
+- **Strategy** - classification chooses between heuristic and AI strategies by confidence.
+- **Layered architecture** - UI → services (`lib/*`) → adapters → external systems.
 
 ## 4. Domain model
 
@@ -115,16 +114,14 @@ configurable and versioned rather than hard-coded:
 
 ## 7. Deployment recommendation & cost
 
-**Recommended:** cloud, serverless. Frontend + API on **Vercel** (free Hobby
-tier), Postgres on **Neon** (free tier), with Alchemy and OpenAI as managed
-APIs.
+**Deployed:** [cryptotaxke.vercel.app](https://cryptotaxke.vercel.app) on Vercel Hobby tier,
+with Alchemy and Groq as managed APIs.
 
 | Component | Service | Cost (low volume) |
 | --- | --- | --- |
 | App hosting | Vercel Hobby | $0 |
-| Database | Neon free tier | $0 |
 | On-chain data | Alchemy free tier | $0 |
-| AI | OpenAI usage-based | a few $ / month |
+| AI | Groq free tier | $0 |
 
 **Why cloud over on-prem:** zero ops, automatic scaling, free tiers suit a
 solo/early-stage product. On-prem would add server management cost and effort

@@ -77,16 +77,16 @@ _As a user, I want to ask "how much profit did I make this year?"_
 - [x] Chat answers questions grounded in the user's transactions
 
 **US-12 — Grounded tax answers (RAG)**
-- [x] Knowledge base of Kenyan tax guidance is embedded (pgvector)
+- [x] Curated Kenyan tax knowledge base with keyword retrieval
 - [x] Tax answers cite their sources
 
 **US-13 — Polish & hardening**
 - [x] Loading and error states throughout
-- [x] Unit and component test coverage across core modules
-- [ ] Input validation and rate limiting on API routes
+- [x] Unit and component test coverage across core modules (41 tests)
+- [ ] API rate limiting (deferred)
 
 **US-14 — Delivery**
-- [ ] Design & testing document complete
+- [x] Design & testing document complete
 - [ ] Demo recorded (15–20 min)
 - [ ] Repository shared with `quantic-grader`
 

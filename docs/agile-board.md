@@ -1,65 +1,66 @@
-# Agile task board (CryptoTaxKE)
+# Agile task board
 
-The capstone handbook requires an **accessible agile task board** documenting user
-stories, tasks, and completion status across **at least three sprints**.
+CryptoTaxKE was delivered in **three one-week sprints** using Scrum (solo). User
+stories, acceptance criteria, and completion status are tracked on the GitHub
+Project board.
 
-## Where the sprints live
+## Board
 
-| Artifact | Purpose | Link |
+**[CryptoTaxKE — Capstone Sprint Board](https://github.com/users/ro61zzy/projects/3)**
+
+Columns: **Todo · In Progress · Done**
+
+All 14 user stories (US-1 … US-14) are filed as GitHub Issues in
+[ro61zzy/cryptotaxke](https://github.com/ro61zzy/cryptotaxke/issues).
+
+---
+
+## Sprint summary
+
+| Sprint | Dates | Goal | Outcome |
+| --- | --- | --- | --- |
+| Sprint 1 | Jun 24 – Jun 29 | Foundation: ingest and display classified transactions | Complete |
+| Sprint 2 | Jun 30 – Jul 5 | Intelligence: explanations, pricing, FIFO, dashboard | Complete |
+| Sprint 3 | Jul 6 – Jul 11 | RAG chat, polish, documentation, demo | In progress |
+
+---
+
+## Story completion (Jul 2026)
+
+| ID | Story | Status |
 | --- | --- | --- |
-| **GitHub Project board** | Primary deliverable for graders (Issues + columns) | See README → *Agile task board* |
-| [`sprint-plan.md`](./sprint-plan.md) | Sprint dates, user stories, acceptance criteria |
+| US-1 | Analyze a wallet by address | Done |
+| US-2 | Import transaction history | Done |
+| US-3 | See readable transactions | Done |
+| US-4 | Classify transactions | Done |
+| US-5 | Project foundations (CI, Vercel deploy) | Done |
+| US-6 | Plain-English explanations | Done |
+| US-7 | AI-assisted classification | Partial (AI escalation done; manual label override deferred) |
+| US-8 | Historical pricing in KES | Done |
+| US-9 | Capital gains (FIFO) | Done |
+| US-10 | Dashboard & tax estimate | Done |
+| US-11 | Ask questions about my data | Done |
+| US-12 | Grounded tax answers (RAG) | Done |
+| US-13 | Polish & hardening | Partial (loading states, 41 tests; API rate limiting deferred) |
+| US-14 | Delivery (doc, demo, grader access) | In progress |
 
-## Sprint schedule
+**12 of 14** stories fully complete on the board. US-7 and US-13 have minor scope
+deferred; US-14 covers final submission artifacts.
 
-| Sprint | Dates | Goal |
-| --- | --- | --- |
-| Sprint 1 | Jun 24 – Jun 29 | Foundation: ingest and display classified transactions |
-| Sprint 2 | Jun 30 – Jul 5 | Intelligence: explanations, pricing, FIFO gains, dashboard |
-| Sprint 3 | Jul 6 – Jul 11 | RAG chat, polish, documentation, demo |
+---
 
-## One-time setup (GitHub Project)
+## Supporting documents
 
-### 1. Push the code
+| Document | Contents |
+| --- | --- |
+| [`sprint-plan.md`](./sprint-plan.md) | Full user stories with acceptance criteria |
+| [`design-and-testing.md`](./design-and-testing.md) | Architecture, design decisions, test strategy |
 
-From the project folder (you must be logged into GitHub):
+---
 
-```bash
-git push -u origin main
-```
+## CI / Definition of Done
 
-### 2. Create the board and issues
+A story is **Done** when code is merged to `main`, CI is green, relevant tests
+pass, and the feature is visible on the [deployed app](https://cryptotaxke.vercel.app).
 
-```bash
-brew install gh          # if needed
-gh auth login
-chmod +x scripts/setup-github-project.sh
-./scripts/setup-github-project.sh
-```
-
-The script creates **14 user-story issues** (US-1 … US-14) with sprint labels and
-a **GitHub Project** board.
-
-### 3. Arrange columns in the UI
-
-Open the project URL printed by the script, then:
-
-1. **Add all issues** from `ro61zzy/cryptotaxke` to the board
-2. Create columns: **Backlog · Sprint 1 · Sprint 2 · Sprint 3 · Done**
-3. Move cards:
-   - **Done:** US-1, US-2, US-3, US-4 (Sprint 1 complete)
-   - **Sprint 1:** US-5 (Vercel deploy remaining)
-   - **Sprint 2:** US-6 … US-10
-   - **Sprint 3:** US-11 … US-14
-
-### 4. Link it in the README
-
-Copy the project URL into `README.md` → *Agile task board* so graders can open it
-directly from the repo.
-
-## Manual alternative (no CLI)
-
-1. Repo → **Projects** → **New project** → **Board**
-2. Repo → **Issues** → **New issue** for each US-1 … US-14 (copy text from
-   [`sprint-plan.md`](./sprint-plan.md))
-3. Add issues to the board and arrange by sprint column as above
+GitHub Actions runs on every push: lint → typecheck → **41 tests** → production build.
