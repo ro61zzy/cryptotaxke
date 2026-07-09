@@ -20,7 +20,7 @@ under **current KRA rules**, with a chat assistant grounded in Kenyan guidance.
 | **Design & testing document** | [`docs/design-and-testing.md`](docs/design-and-testing.md) |
 | **Sprint plan & user stories** | [`docs/sprint-plan.md`](docs/sprint-plan.md) |
 | **CI pipeline** | [GitHub Actions](https://github.com/ro61zzy/cryptotaxke/actions) |
-| **Demo recording** | _link to be added_ |
+
 
 ---
 
